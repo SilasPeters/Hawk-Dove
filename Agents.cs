@@ -6,21 +6,21 @@ public abstract class Agent
 	public abstract float  ChanceHawk(Random r);
 	
 	public virtual  void   SetNewStance(Random r)
-		=> Stance = r.Next(0, 100) >= ChanceHawk(r)
+		=> Stance = r.NextSingle() < ChanceHawk(r)
 			? Stance.Hawk : Stance.Dove;
 }
 
 internal class NeutralAgent : Agent
 {
-	public override float ChanceHawk(Random r) => 50f;
+	public override float ChanceHawk(Random r) => .50f;
 }
 internal class AggressiveAgent : Agent
 {
-	public override float ChanceHawk(Random r) => 75f;
+	public override float ChanceHawk(Random r) => .75f;
 }
 internal class PeacefulAgent : Agent
 {
-	public override float ChanceHawk(Random r) => 25f;
+	public override float ChanceHawk(Random r) => .25f;
 }
 
 internal abstract class ResponsiveAgent : Agent

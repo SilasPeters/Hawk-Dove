@@ -4,7 +4,7 @@ using Hawk_Dove;
 const int iterations = 10000;
 
 var resource = new DefaultResource(1f);
-var agents   = new Agent[] { new NeutralAgent(), new NeutralAgent() };
+var agents   = new Agent[] { new NeutralAgent(), new AggressiveAgent() };
 var hawkDoveScenario = new HawkDoveScenario(resource, agents, 1.2f);
 
 var random = new Random(69420); // Seed ensures deterministic testing
