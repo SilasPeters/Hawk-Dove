@@ -28,8 +28,8 @@ output.WriteLine();
 output.WriteLine($"{iterations} iterations took:", t.Elapsed.Milliseconds.ToString(), "ms");
 output.WriteLine("Seed used:",                     seed.ToString());
 output.WriteLine("Average:",                       outcomes.Average().ToString());
-output.WriteLine("    Min:",                       outcomes.Min().ToString());
-output.WriteLine("    Max:",                       outcomes.Max().ToString());
+output.WriteLine("Min:",                       outcomes.Min().ToString());
+output.WriteLine("Max:",                       outcomes.Max().ToString());
 output.WriteLine();
 foreach(var outcome in outcomes)
 	output.WriteLine(outcome.ToString());
