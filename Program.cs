@@ -2,6 +2,7 @@
 using Hawk_Dove;
 
 const int iterations = 1000;
+var output = new Output();
 
 var resource = new DefaultResource(1f);
 var agents   = new Agent[] { new NeutralAgent(), new AggressiveAgent() };
@@ -18,15 +19,19 @@ for (var i = 0; i < iterations; i++)
 	t.Start();
 	var outcome = hawkDoveScenario.Run(random);
 	t.Stop();
-	
-	Console.WriteLine("Outcome: " + outcome);
 	outcomes[i] = outcome;
 }
 
 // Print summaries
-Console.WriteLine();
-Console.WriteLine($"{iterations} iterations took {t.Elapsed.Milliseconds}ms");
-Console.WriteLine("Seed used: " + seed);
-Console.WriteLine("Average: " + outcomes.Average());
-Console.WriteLine("    Min: " + outcomes.Min());
-Console.WriteLine("    Max: " + outcomes.Max());
+output.WriteLine("Hawk-Dove Simulation on " + DateTime.Now.ToString("MM-dd HH-mm-ss"));
+output.WriteLine();
+output.WriteLine($"{iterations} iterations took {t.Elapsed.Milliseconds}ms");
+output.WriteLine("Seed used: " + seed);
+output.WriteLine("Average: " + outcomes.Average());
+output.WriteLine("    Min: " + outcomes.Min());
+output.WriteLine("    Max: " + outcomes.Max());
+output.WriteLine();
+foreach(var outcome in outcomes)
+	output.WriteLine(outcome.ToString());
+
+Console.Write("Wrote output to " + output.OutputLocation);
