@@ -14,14 +14,17 @@ const int variations = 1000;
 
 var averages = new float[variations];
 var variationVariables = new float[variations];
+var variationVariables_2 = new float[variations];
 
 for (var i = 0; i < variations; ++i)
 {
-    float variationVariable_conflictCosts = 1.2f;//5f * (float)i / variations;
-    float variationVariable_agentChances  = (float)i * 1f / variations;
+    float variationVariable_conflictCosts = 2f;//5f * (float)i / variations;
+    float variationVariable_agentChances_0  = random.NextSingle();
+    float variationVariable_agentChances_1 =  random.NextSingle();
     var resource = new DefaultResource(1f);
-    var agents = new Agent[] { new FlexibleAgent(), new PeacefulAgent() };
-    ((FlexibleAgent)agents[0]).chanceRate = variationVariable_agentChances;
+    var agents = new Agent[] { new FlexibleAgent(), new FlexibleAgent() };
+    ((FlexibleAgent)agents[0]).chanceRate = variationVariable_agentChances_0;
+    ((FlexibleAgent)agents[1]).chanceRate = variationVariable_agentChances_1;
     var hawkDoveScenario = new HawkDoveScenario(resource, agents, variationVariable_conflictCosts);
     var outcomes = new float[iterations];
     for (var j = 0; j < iterations; j++)
@@ -33,7 +36,8 @@ for (var i = 0; i < variations; ++i)
         outcomes[j] = outcome;
     }
     averages[i] = outcomes.Average();
-    variationVariables[i] = variationVariable_agentChances;
+    variationVariables[i] = variationVariable_agentChances_0;
+    variationVariables_2[i] = variationVariable_agentChances_1;
 }
 
 // Print summaries
@@ -47,6 +51,6 @@ output.WriteLine("Max:",                             variationVariables.Max().To
 output.WriteLine();
 output.WriteLine("averages,variable");
 for (var i = 0; i < variations; i++)
-    output.WriteLine(averages[i].ToString() + "," + variationVariables[i].ToString());
+    output.WriteLine(averages[i].ToString() + "," + variationVariables[i].ToString() + "," + variationVariables_2[i].ToString());
 
 Console.Write("Wrote output to " + output.OutputLocation);
