@@ -12,7 +12,7 @@ public abstract class Agent
 
 internal class NeutralAgent : Agent
 {
-	public override float ChanceHawk(Random r) => .50f;
+    public override float ChanceHawk(Random r) => .50f;
 }
 internal class AggressiveAgent : Agent
 {
@@ -21,6 +21,12 @@ internal class AggressiveAgent : Agent
 internal class PeacefulAgent : Agent
 {
 	public override float ChanceHawk(Random r) => .25f;
+}
+
+internal class FlexibleAgent : Agent
+{
+	public float chanceRate;
+    public override float ChanceHawk(Random r) => chanceRate;
 }
 
 internal abstract class ResponsiveAgent : Agent
