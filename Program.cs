@@ -51,6 +51,6 @@ output.WriteLine("Max:",                             variationVariables.Max().To
 output.WriteLine();
 output.WriteLine("averages,variable");
 for (var i = 0; i < variations; i++)
-    output.WriteLine(averages[i].ToString() + "," + variationVariables[i].ToString() + "," + variationVariables_2[i].ToString());
+    output.WriteLine(averages[i].ToString(),variationVariables[i].ToString(),variationVariables_2[i].ToString());
 
 Console.Write("Wrote output to " + output.OutputLocation);
