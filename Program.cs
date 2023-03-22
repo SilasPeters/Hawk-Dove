@@ -2,14 +2,14 @@
 using Hawk_Dove;
 
 // Constants
-const int   iterations    = 1000;
+const int   iterations    = 100000;
 const float conflictCosts = 75f;
 const float resourceValue = 100f;
-const int  historyRange = 5;
+const int  historyRange = 100;
 
 
-const float agent1Init = 0.2f;
-const float agent2Init = 0.6f;
+const float agent1Init = 0.8f;
+const float agent2Init = 0.4f;
 
 // Create scenario
 var resource = new DefaultResource(resourceValue);
@@ -26,7 +26,7 @@ output.WriteLine("historyRange: ", historyRange.ToString());
 output.WriteLine("Agent1: ", agent1Init.ToString());
 output.WriteLine("Agent2: ", agent2Init.ToString());
 
-var seed = 18080093;// Environment.TickCount;
+var seed = Environment.TickCount;
 var random = new Random(seed); // Seed ensures deterministic testing
 output.WriteLine("Seed used:", seed.ToString());
 
@@ -52,8 +52,8 @@ for (int i = 0; i < iterations; i++)
             else
                 foo = false;
         }
-        if(foo)
-            random = new Random(seed);
+        if (foo)
+            ;// random = new Random(seed);
     }
     if (i % 1000 == 0) { Console.Clear(); Console.WriteLine("runs: " + i.ToString()); Console.WriteLine(outcome.ToString()); }
 }

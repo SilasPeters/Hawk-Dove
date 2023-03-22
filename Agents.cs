@@ -76,7 +76,7 @@ internal class HistoryBasedAgent : Agent
 		}
 		float averageIncreasedScore = increasedScores.Any() ? increasedScores.Average() : 0;
 		float averageDecreasedScore = decreasedScores.Any() ? decreasedScores.Average() : 0;
-		if(averageIncreasedScore > averageDecreasedScore) { if(aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness+=aggressivenessIncrease; }
+		if(averageIncreasedScore >= averageDecreasedScore) { if(aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness+=aggressivenessIncrease; }
 		if(averageDecreasedScore > averageIncreasedScore) { if(aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness-=aggressivenessIncrease; }
 		return aggressiveness;
     }
