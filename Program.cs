@@ -39,6 +39,22 @@ for (int i = 0; i < iterations; i++)
     var outcome = hawkDoveScenario.Run(random);
     agent1.history.Add(Tuple.Create(agent1.aggressiveness, outcome.Item1));
     agent2.history.Add(Tuple.Create(agent2.aggressiveness, outcome.Item2));
+    if(agent1.history.Count > 4)
+    {
+        var last = agent1.history.Last().Item2;
+        bool foo = false;
+        for (int j = 1; j < 5; j++)
+        {
+            if (last == agent1.history[agent1.history.Count() - j].Item2)
+            {
+                foo = true;
+            }
+            else
+                foo = false;
+        }
+        if(foo)
+            random = new Random(seed);
+    }
     if (i % 1000 == 0) { Console.Clear(); Console.WriteLine("runs: " + i.ToString()); Console.WriteLine(outcome.ToString()); }
 }
 
