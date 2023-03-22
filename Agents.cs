@@ -42,43 +42,48 @@ internal class ResponseAgent : Agent
 internal class HistoryBasedAgent : Agent
 {
 	public float aggressiveness;
-	public List<Sample> history;
+	public List<Tuple<float,float>> history;
 	public int historyRange;
-	const float aggressivenessIncrease = 0.5f;
+	const float aggressivenessIncrease = 0.01f;
 
-	public HistoryBasedAgent(float aggression) { aggressiveness = aggression; history = new(); }
+	public HistoryBasedAgent(float aggression, int hr) { aggressiveness = aggression; historyRange = hr; history = new(); }
 	public override float ChanceHawk(Random r)
 	{
 
 		List<float> increasedScores = new();
 		List<float> decreasedScores = new();
 		// do something for each known sample withing the range
-		for(int i = history.Count - historyRange - 1; i < history.Count; i++)
+		if (history.Count >= historyRange)
 		{
-			if(i > 0)
+            for (int i = Math.Max(0, history.Count - historyRange - 1); i < history.Count; i++)
+            {
+                if (i > 0)
+                {
+                    if (history[i - 1].Item1 <= history[i].Item1)
+                        increasedScores.Add(history[i].Item2);
+                    else
+                        decreasedScores.Add(history[i].Item2);
+                }
+            }
+        }
+		else
+		{
+			if (history.Any())
 			{
-				if (history[i - 1].agrressiveness <= history[i].agrressiveness)
-					increasedScores.Add(history[i].score);
-				else
-					decreasedScores.Add(history[i].score);
+				if (history.Last().Item2 < 0f) { if (aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness += aggressivenessIncrease; }
+				else { if (aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness -= aggressivenessIncrease; }
 			}
 		}
-		float averageIncreasedScore = increasedScores.Average();
-		float averageDecreasedScore = decreasedScores.Average();
-		if(averageIncreasedScore > averageDecreasedScore) { return aggressiveness+=aggressivenessIncrease; }
-		if(averageDecreasedScore > averageIncreasedScore) { return aggressiveness-=aggressivenessIncrease; }
+		float averageIncreasedScore = increasedScores.Any() ? increasedScores.Average() : 0;
+		float averageDecreasedScore = decreasedScores.Any() ? decreasedScores.Average() : 0;
+		if(averageIncreasedScore > averageDecreasedScore) { if(aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness+=aggressivenessIncrease; }
+		if(averageDecreasedScore > averageIncreasedScore) { if(aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness-=aggressivenessIncrease; }
 		return aggressiveness;
-	}
+    }
 }
 
 public enum Stance
 {
 	Hawk,
 	Dove
-}
-
-struct Sample
-{
-	public float agrressiveness;
-	public float score;
 }

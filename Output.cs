@@ -15,7 +15,7 @@ public sealed class Output : IDisposable
 	
 	public void WriteLine(params string[] values)
 	{
-		stream.WriteLine(string.Join(';', values));
+		stream.WriteLine(string.Join(',', values));
 	}
 
 	public void Dispose()

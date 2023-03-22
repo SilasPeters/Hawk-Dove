@@ -3,31 +3,21 @@ namespace Hawk_Dove;
 internal class HawkDoveScenario
 {
 	public IResource Resource      { get; }
-	public Agent[]   Agents        { get; }
+	public Tuple<HistoryBasedAgent, HistoryBasedAgent>   Agents        { get; }
 	public float     ConflictCosts { get; }
-	
-	private readonly int _agentCount;
 
-	public HawkDoveScenario(IResource resource, Agent[] agents, float conflictCosts)
+	public HawkDoveScenario(IResource resource, Tuple<HistoryBasedAgent, HistoryBasedAgent> agents, float conflictCosts)
 	{
 		Resource      = resource;
 		Agents        = agents;
 		ConflictCosts = conflictCosts;
-		_agentCount   = agents.Length;
 	}
 
-	public float Run(Random random)
+	public Tuple<float,float> Run(Random random)
 	{
-		foreach (var agent in Agents)
-			agent.SetNewStance(random);
-
-		float outcome = 0; // 0 means no change in value
-		for (int j = 0; j < _agentCount - 1; j++)
-			for (int i = j + 1; i < _agentCount; i++)
-				outcome += Interact(Agents[i], Agents[j], Resource, ConflictCosts).GetValue();
-				
-
-		return outcome;
+		Agents.Item1.SetNewStance(random);
+		Agents.Item2.SetNewStance(random);
+		return GenerateOutcome(Agents.Item1,Agents.Item2, Resource,ConflictCosts);
 	}
 
 	private static IResource Interact(Agent a, Agent b, IResource resource, float conflictCosts)
@@ -38,4 +28,17 @@ internal class HawkDoveScenario
 			: b.Stance == Stance.Hawk
 				? resource.WasConquered(a, b)
 				: resource.WasConflicted(a, b, conflictCosts);
+
+	private Tuple<float,float> GenerateOutcome(Agent a, Agent b, IResource resource, float conflictCosts)
+	{
+		return 
+		a.Stance == Stance.Dove
+            ? b.Stance == Stance.Dove
+                ? Tuple.Create(0.5f * resource.GetValue(), 0.5f * resource.GetValue())
+                : Tuple.Create(0f, resource.GetValue())
+            : b.Stance == Stance.Hawk
+				? Tuple.Create(0.5f * resource.GetValue() - conflictCosts, 0.5f * resource.GetValue() - conflictCosts)
+                : Tuple.Create(resource.GetValue(),0f);
+	}
+
 }
