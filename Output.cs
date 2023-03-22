@@ -22,5 +22,7 @@ public sealed class Output : IDisposable
 	{
 		stream.Flush();
 		stream.Dispose();
+		
+		Console.Out.Write($"Wrote output to {OutputLocation}");
 	}
 }
