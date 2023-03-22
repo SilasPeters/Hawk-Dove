@@ -25,6 +25,7 @@ internal class HawkDoveScenario
 		for (int j = 0; j < _agentCount - 1; j++)
 			for (int i = j + 1; i < _agentCount; i++)
 				outcome += Interact(Agents[i], Agents[j], Resource, ConflictCosts).GetValue();
+				
 
 		return outcome;
 	}

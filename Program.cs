@@ -8,7 +8,9 @@ const float resourceValue = 1f;
 
 // Create scenario
 var resource = new DefaultResource(resourceValue);
-var agents = new Agent[] { new FlexibleAgent(), new FlexibleAgent() };
+HistoryBasedAgent agent1 = new(0.3f);
+HistoryBasedAgent agent2 = new(0.4f);
+Agent[] agents = {agent1, agent2};
 var hawkDoveScenario = new HawkDoveScenario(resource, agents, conflictCosts);
 
 // Boilerplate
@@ -19,6 +21,12 @@ output.WriteLine("Iterations:", iterations.ToString());
 var seed = Environment.TickCount;
 var random = new Random(seed); // Seed ensures deterministic testing
 output.WriteLine("Seed used:", seed.ToString());
+
+
+for (int i = 0; i < iterations; i++)
+{
+
+}
 
 // Algorithm
 for (var i = 0; i < iterations; ++i)
