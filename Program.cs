@@ -14,16 +14,16 @@ var agents           = new Agent[] { new FlexibleAgent(), new FlexibleAgent() };
 var hawkDoveScenario = new HawkDoveScenario(resource, agents, conflictCosts);
 
 // Boilerplate
-using var output = new Output();
+using var export = new Export();
 var seed = Environment.TickCount;
 var random = new Random(seed); // Seed ensures deterministic testing
 
 if (printContext)
 {
-	output.WriteLine("Hawk-Dove Simulation on " + DateTime.Now.ToString("MM-dd HH-mm-ss"));
-	output.WriteLine("Iterations:", iterations.ToString());
-	output.WriteLine("Seed used:", seed.ToString());
-	output.WriteLine();
+	export.AddRow($"Hawk-Dove Simulation on {DateTime.Now:MM-dd HH-mm-ss}");
+	export.AddRow("Iterations:", iterations.ToString());
+	export.AddRow("Seed used:", seed.ToString());
+	export.AddRow();
 }
 
 #endregion
@@ -48,8 +48,8 @@ var ratio                       = 0.5f;
 };
 
 // Relate the equilibrium to the initial aggressiveness
-output.WriteLine("initAgg1", "initAgg2", "equilibrium");
+export.AddRow("initAgg1", "initAgg2", "equilibrium");
 foreach (var (initAgg1, initAgg2, equilibrium) in outComeSimulation)
-	output.WriteLine(initAgg1.ToString(), initAgg2.ToString(), equilibrium.ToString());
+	export.AddRow(initAgg1.ToString(), initAgg2.ToString(), equilibrium.ToString());
 
 // Export the CSV using https://chart-studio.plotly.com/create/scatter-chart/#/

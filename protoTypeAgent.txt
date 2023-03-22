@@ -23,8 +23,8 @@ Agent:
 
 
 output for manually searching equillibrium
-	assign history to agent per iteration
-	assign history range initially
+	assign history to agents per iteration
+	assign history range initially for agents
 	agents exist during the whole test
 	per agent:
 		aggressiveness
