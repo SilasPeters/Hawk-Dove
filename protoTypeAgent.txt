@@ -1,0 +1,38 @@
+score
+aggressiveness
+iteration
+
+je kan het onderzoek uitbreiden door ook de history van je tegenstander's zetten mee te nemen en of diens score.
+
+
+Agent:
+	history > [aggressiveness (float) or stance,score]
+	historyRange > integer value (hoe ver kan je terug kijken)
+	ChanceHawk > 
+			take all history from |last-histeryRange| till |last|
+			take average score increase(decrease for negative)
+				for hawk
+				for dove
+			or	
+				foreach aggr/score check its previous in the history range
+					note for each increase in aggr the score diff
+					note for each decrease in aggr the score diff
+					average these ^^^^
+					the highest average is the next one -> increase or decrease
+		returns aggressiveness (float)
+
+
+output for manually searching equillibrium
+	per agent:
+		aggressiveness
+		score
+	iterations
+
+base a algorithm on finding, to find equillibriums
+
+output for research question:
+	initial aggresivness agent one
+	initial aggresivenss agent two
+	ratio of scores of both agents (equillibrium)
+	
+	

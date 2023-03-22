@@ -29,12 +29,22 @@ internal class FlexibleAgent : Agent
     public override float ChanceHawk(Random r) => chanceRate;
 }
 
-internal abstract class ResponsiveAgent : Agent
+internal class ResponseAgent : Agent
 {
-	private IList<Stance> _stances;
+    public override float ChanceHawk(Random r)
+    {
+        throw new NotImplementedException();
+    }
+}
+
+internal class HistoryBasedAgent : Agent
+{
+	public float[] scores;
 	public override float ChanceHawk(Random r)
-		=> throw new NotImplementedException("This method will return a chance" +
-		                                     "based on the history of the conflicts");
+	{
+
+		return 0f;
+	}
 }
 
 public enum Stance
