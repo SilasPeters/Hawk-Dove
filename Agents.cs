@@ -52,16 +52,19 @@ internal class HistoryBasedAgent : Agent
 
 		List<double> increasedScores = new();
 		List<double> decreasedScores = new();
-		// do something for each known sample withing the range
+		
+		// Count the scores that have increased or decreased
 		if (history.Count >= historyRange)
 		{
-            for (int i = Math.Max(0, history.Count - historyRange - 1); i < history.Count; i++)
+            for (int i = Math.Max(0, history.Count - historyRange - 1); i < history.Count; i++) // For the last X samples, where X = historyRange
             {
                 if (i > 0)
                 {
-                    if (history[i - 1].Item1 <= history[i].Item1)
+	                var prev = history[i - 1].Item1;
+	                var curr = history[i].Item1;
+                    if (prev < curr)
                         increasedScores.Add(history[i].Item2);
-                    else
+                    else if (curr < prev)
                         decreasedScores.Add(history[i].Item2);
                 }
             }
