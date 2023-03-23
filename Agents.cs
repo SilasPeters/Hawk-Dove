@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Drawing;
 
 namespace Hawk_Dove;
@@ -52,34 +53,41 @@ internal class HistoryBasedAgent : Agent
 
 		List<int> increasedScores = new();
 		List<int> decreasedScores = new();
-		
-		if (history.Count >= historyRange)
+		List<int> neutralScore = new();
+
+		if (history.Any())
 		{
-			// Count the scores that have increased or decreased
-            for (int i = Math.Max(0, history.Count - historyRange - 1); i < history.Count; i++) // For the last X samples, where X = historyRange
-            {
-                if (i > 0)
+			if(history.Count > 1)
+			{
+                for (int i = 1; i < history.Count; i++)
                 {
-	                var prev = history[i - 1].Item1;
-	                var curr = history[i].Item1;
-                    if (prev < curr)
-                        increasedScores.Add(history[i].Item2);
-                    else if (curr < prev)
-                        decreasedScores.Add(history[i].Item2);
+					if (history[i].Item2 > history[i-1].Item2)
+						increasedScores.Add(history[i].Item2);
+					else if (history[i].Item2 < history[i-1].Item2)
+						decreasedScores.Add(history[i].Item2);
+					else
+						neutralScore.Add(history[i].Item2);
                 }
             }
-        }
-		else if (history.Any())
-		{
-			if (history.Last().Item2 < 0) { if (aggressiveness + aggressivenessIncrease <= 1) return aggressiveness += aggressivenessIncrease; }
-			else { if (aggressiveness - aggressivenessIncrease >= 0) return aggressiveness -= aggressivenessIncrease; }
 		}
 		
-		int averageIncreasedScore = increasedScores.Any() ? (int)increasedScores.Average() : 0;
-		int averageDecreasedScore = decreasedScores.Any() ? (int)decreasedScores.Average() : 0;
-		if(averageIncreasedScore >= averageDecreasedScore && aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness+=aggressivenessIncrease;
-		if(averageDecreasedScore > averageIncreasedScore && aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness-=aggressivenessIncrease;
-		return aggressiveness;
+		double averageIncreasedScore = increasedScores.Any() ? increasedScores.Average() : 0d;
+        double averageDecreasedScore = decreasedScores.Any() ? decreasedScores.Average() : 0d;
+        double averageNeutralScore   = neutralScore.Any()	 ? neutralScore.Average()    : 0d;
+
+		List<double> scores = new() { averageIncreasedScore, averageDecreasedScore, averageNeutralScore };
+
+		if(history.Count >= 100)
+		{
+			Console.Clear();
+		}
+
+        return scores.IndexOf(scores.Max()) switch
+        {
+            0 => aggressiveness += aggressivenessIncrease,
+            1 => aggressiveness -= aggressivenessIncrease,
+            _ => averageNeutralScore < 0 ? aggressiveness -= aggressivenessIncrease : aggressiveness,
+        };
     }
 }
 

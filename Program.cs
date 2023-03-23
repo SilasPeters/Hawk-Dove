@@ -2,14 +2,14 @@
 using Hawk_Dove;
 
 // Constants
-const int   iterations    = 10000;
+const int   iterations    = 1000;
 const int conflictCosts = 75;
-const int resourceValue = 50;
-const int  historyRange = 100;
+const int resourceValue = 100;
+const int  historyRange = 0;
 
 
-const int agent1Init = 80;
-const int agent2Init = 40;
+const int agent1Init = 10;
+const int agent2Init = 0;
 
 // Create scenario
 var resource = new DefaultResource(resourceValue);
@@ -39,22 +39,6 @@ for (int i = 0; i < iterations; i++)
     var outcome = hawkDoveScenario.Run(random);
     agent1.history.Add(Tuple.Create(agent1.aggressiveness, outcome.Item1));
     agent2.history.Add(Tuple.Create(agent2.aggressiveness, outcome.Item2));
-    if(agent1.history.Count > 4)
-    {
-        var last = agent1.history.Last().Item2;
-        bool foo = false;
-        for (int j = 1; j < 5; j++)
-        {
-            if (last == agent1.history[agent1.history.Count() - j].Item2)
-            {
-                foo = true;
-            }
-            else
-                foo = false;
-        }
-        if (foo)
-            ;//random = new Random(seed);
-    }
     if (i % 1000 == 0) { Console.Clear(); Console.WriteLine("runs: " + i.ToString()); Console.WriteLine(outcome.ToString()); }
 }
 

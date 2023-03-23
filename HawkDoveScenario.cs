@@ -37,7 +37,7 @@ internal class HawkDoveScenario
                 ? Tuple.Create(resource.GetValue()/2, resource.GetValue() / 2)
                 : Tuple.Create(0, resource.GetValue())
             : b.Stance == Stance.Hawk
-				? Tuple.Create((resource.GetValue()/2) - conflictCosts, (resource.GetValue() / 2) * conflictCosts)
+				? Tuple.Create((resource.GetValue()/2) - conflictCosts, (resource.GetValue() / 2) - conflictCosts)
                 : Tuple.Create(resource.GetValue(),0);
 	}
 
