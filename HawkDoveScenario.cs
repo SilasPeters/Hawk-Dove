@@ -4,23 +4,23 @@ internal class HawkDoveScenario
 {
 	public IResource Resource      { get; }
 	public Tuple<HistoryBasedAgent, HistoryBasedAgent>   Agents        { get; }
-	public double     ConflictCosts { get; }
+	public int     ConflictCosts { get; }
 
-	public HawkDoveScenario(IResource resource, Tuple<HistoryBasedAgent, HistoryBasedAgent> agents, double conflictCosts)
+	public HawkDoveScenario(IResource resource, Tuple<HistoryBasedAgent, HistoryBasedAgent> agents, int conflictCosts)
 	{
 		Resource      = resource;
 		Agents        = agents;
 		ConflictCosts = conflictCosts;
 	}
 
-	public Tuple<double,double> Run(Random random)
+	public Tuple<int,int> Run(Random random)
 	{
 		Agents.Item1.SetNewStance(random);
 		Agents.Item2.SetNewStance(random);
 		return GenerateOutcome(Agents.Item1,Agents.Item2, Resource,ConflictCosts);
 	}
 
-	private static IResource Interact(Agent a, Agent b, IResource resource, double conflictCosts)
+	private static IResource Interact(Agent a, Agent b, IResource resource, int conflictCosts)
 		=> a.Stance == Stance.Dove
 			? b.Stance == Stance.Dove
 				? resource.WasShared(a, b)
@@ -29,16 +29,16 @@ internal class HawkDoveScenario
 				? resource.WasConquered(a, b)
 				: resource.WasConflicted(a, b, conflictCosts);
 
-	private Tuple<double,double> GenerateOutcome(Agent a, Agent b, IResource resource, double conflictCosts)
+	private Tuple<int,int> GenerateOutcome(Agent a, Agent b, IResource resource, int conflictCosts)
 	{
 		return 
 		a.Stance == Stance.Dove
             ? b.Stance == Stance.Dove
-                ? Tuple.Create(0.5d * resource.GetValue(), 0.5d * resource.GetValue())
-                : Tuple.Create(0d, resource.GetValue())
+                ? Tuple.Create(resource.GetValue()/2, resource.GetValue() / 2)
+                : Tuple.Create(0, resource.GetValue())
             : b.Stance == Stance.Hawk
-				? Tuple.Create(0.5d * resource.GetValue() - conflictCosts, 0.5d * resource.GetValue() - conflictCosts)
-                : Tuple.Create(resource.GetValue(),0d);
+				? Tuple.Create((resource.GetValue()/2) - conflictCosts, (resource.GetValue() / 2) * conflictCosts)
+                : Tuple.Create(resource.GetValue(),0);
 	}
 
 }

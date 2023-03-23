@@ -3,13 +3,13 @@ using Hawk_Dove;
 
 // Constants
 const int   iterations    = 10000;
-const double conflictCosts = 75f;
-const double resourceValue = 50f;
+const int conflictCosts = 75;
+const int resourceValue = 50;
 const int  historyRange = 100;
 
 
-const double agent1Init = 0.8f;
-const double agent2Init = 0.4f;
+const int agent1Init = 80;
+const int agent2Init = 40;
 
 // Create scenario
 var resource = new DefaultResource(resourceValue);
@@ -30,8 +30,8 @@ var seed = Environment.TickCount;
 var random = new Random(seed); // Seed ensures deterministic testing
 output.WriteLine("Seed used:", seed.ToString());
 
-double[] scoresAgentOne = new double[iterations];
-double[] scoresAgentTwo = new double[iterations];
+int[] scoresAgentOne = new int[iterations];
+int[] scoresAgentTwo = new int[iterations];
 
 // Algorithm
 for (int i = 0; i < iterations; i++)

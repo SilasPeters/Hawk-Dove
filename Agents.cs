@@ -5,35 +5,35 @@ namespace Hawk_Dove;
 public abstract class Agent
 {
 	public          Stance Stance { get; protected set; }
-	public abstract double  ChanceHawk(Random r);
+	public abstract int  ChanceHawk(Random r);
 	
 	public virtual  void   SetNewStance(Random r)
-		=> Stance = r.NextSingle() < ChanceHawk(r)
+		=> Stance = r.Next(0,100) < ChanceHawk(r)
 			? Stance.Hawk : Stance.Dove;
 }
 
 internal class NeutralAgent : Agent
 {
-    public override double ChanceHawk(Random r) => .50f;
+    public override int ChanceHawk(Random r) => 50;
 }
 internal class AggressiveAgent : Agent
 {
-	public override double ChanceHawk(Random r) => .75f;
+	public override int ChanceHawk(Random r) => 75;
 }
 internal class PeacefulAgent : Agent
 {
-	public override double ChanceHawk(Random r) => .25f;
+	public override int ChanceHawk(Random r) => 25;
 }
 
 internal class FlexibleAgent : Agent
 {
-	public double chanceRate;
-    public override double ChanceHawk(Random r) => chanceRate;
+	public int chanceRate;
+    public override int ChanceHawk(Random r) => chanceRate;
 }
 
 internal class ResponseAgent : Agent
 {
-    public override double ChanceHawk(Random r)
+    public override int ChanceHawk(Random r)
     {
         throw new NotImplementedException();
     }
@@ -41,17 +41,17 @@ internal class ResponseAgent : Agent
 
 internal class HistoryBasedAgent : Agent
 {
-	public double aggressiveness;
-	public List<Tuple<double,double>> history;
+	public int aggressiveness;
+	public List<Tuple<int,int>> history;
 	public int historyRange;
-	const double aggressivenessIncrease = 0.01f;
+	const int aggressivenessIncrease = 1;
 
-	public HistoryBasedAgent(double aggression, int hr) { aggressiveness = aggression; historyRange = hr; history = new(); }
-	public override double ChanceHawk(Random r)
+	public HistoryBasedAgent(int aggression, int hr) { aggressiveness = aggression; historyRange = hr; history = new(); }
+	public override int ChanceHawk(Random r)
 	{
 
-		List<double> increasedScores = new();
-		List<double> decreasedScores = new();
+		List<int> increasedScores = new();
+		List<int> decreasedScores = new();
 		
 		if (history.Count >= historyRange)
 		{
@@ -71,12 +71,12 @@ internal class HistoryBasedAgent : Agent
         }
 		else if (history.Any())
 		{
-			if (history.Last().Item2 < 0f) { if (aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness += aggressivenessIncrease; }
-			else { if (aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness -= aggressivenessIncrease; }
+			if (history.Last().Item2 < 0) { if (aggressiveness + aggressivenessIncrease <= 1) return aggressiveness += aggressivenessIncrease; }
+			else { if (aggressiveness - aggressivenessIncrease >= 0) return aggressiveness -= aggressivenessIncrease; }
 		}
 		
-		double averageIncreasedScore = increasedScores.Any() ? increasedScores.Average() : 0;
-		double averageDecreasedScore = decreasedScores.Any() ? decreasedScores.Average() : 0;
+		int averageIncreasedScore = increasedScores.Any() ? (int)increasedScores.Average() : 0;
+		int averageDecreasedScore = decreasedScores.Any() ? (int)decreasedScores.Average() : 0;
 		if(averageIncreasedScore >= averageDecreasedScore && aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness+=aggressivenessIncrease;
 		if(averageDecreasedScore > averageIncreasedScore && aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness-=aggressivenessIncrease;
 		return aggressiveness;
