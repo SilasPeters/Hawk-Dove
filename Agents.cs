@@ -53,9 +53,9 @@ internal class HistoryBasedAgent : Agent
 		List<double> increasedScores = new();
 		List<double> decreasedScores = new();
 		
-		// Count the scores that have increased or decreased
 		if (history.Count >= historyRange)
 		{
+			// Count the scores that have increased or decreased
             for (int i = Math.Max(0, history.Count - historyRange - 1); i < history.Count; i++) // For the last X samples, where X = historyRange
             {
                 if (i > 0)
@@ -69,18 +69,16 @@ internal class HistoryBasedAgent : Agent
                 }
             }
         }
-		else
+		else if (history.Any())
 		{
-			if (history.Any())
-			{
-				if (history.Last().Item2 < 0f) { if (aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness += aggressivenessIncrease; }
-				else { if (aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness -= aggressivenessIncrease; }
-			}
+			if (history.Last().Item2 < 0f) { if (aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness += aggressivenessIncrease; }
+			else { if (aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness -= aggressivenessIncrease; }
 		}
+		
 		double averageIncreasedScore = increasedScores.Any() ? increasedScores.Average() : 0;
 		double averageDecreasedScore = decreasedScores.Any() ? decreasedScores.Average() : 0;
-		if(averageIncreasedScore >= averageDecreasedScore) { if(aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness+=aggressivenessIncrease; }
-		if(averageDecreasedScore > averageIncreasedScore) { if(aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness-=aggressivenessIncrease; }
+		if(averageIncreasedScore >= averageDecreasedScore && aggressiveness + aggressivenessIncrease <= 1f) return aggressiveness+=aggressivenessIncrease;
+		if(averageDecreasedScore > averageIncreasedScore && aggressiveness - aggressivenessIncrease >= 0f) return aggressiveness-=aggressivenessIncrease;
 		return aggressiveness;
     }
 }
