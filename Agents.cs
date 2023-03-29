@@ -8,19 +8,28 @@ public class Agent
 		Stance = r.Next(0, 100) < ChanceHawk(r) ? Stance.Hawk : Stance.Dove;
 
     public int aggressiveness;
-	public List<Historic> history;
+	public int[] history;
+	// private int historyIndex = 0;
 	public int historyRange;
 	const int aggressivenessIncrease = 1;
 
 	public Agent(int a, int hr) 
-	{ 
+	{
 		aggressiveness = a;
 		historyRange = hr; 
-		history = new(); 
+		history = new int[hr]; 
 	}
 
-	public int ChanceHawk(Random r)
+	// private void PushToHistory(int a)
+	// {
+	// 	historyIndex = (historyIndex + 1) % 10;
+	// 	history[historyIndex] = a;
+	// }
+
+	public int ChanceHawk(Random r, int iteration)
 	{
+		history[iteration % historyRange] = 4;
+		
 		List<int> increasedScores = new();
 		List<int> decreasedScores = new();
 		List<int> neutralScore = new();
