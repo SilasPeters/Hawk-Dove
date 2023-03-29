@@ -1,106 +1,45 @@
 ﻿using System.Diagnostics;
+using System.Threading.Tasks;
 using Hawk_Dove;
 
-// Simulation Constants
-const int  iterations   = 10000;
-const int  historyRange = 30;
-const bool debug        = true;
-
-// Conflict Constants
-const int conflictCosts = 200;
-const int resourceValue = 100;
-
-// Initial Aggressiveness
-const int agent1Aggressiveness = 30;
-const int agent2Aggressiveness = 2;
-
-// Create scenario
-Agent agent1 = new(agent1Aggressiveness, historyRange);
-Agent agent2 = new(agent2Aggressiveness, historyRange);
-var hawkDoveScenario = new HawkDoveScenario(agent1, agent2, resourceValue, conflictCosts);
+// random that creates seeds for each random run
+// makes sure that it is re-creatable
+int masterSeed = Environment.TickCount;
+Random masterRandom = new(masterSeed);
 
 
-var seed = 4694968;// Environment.TickCount;
-var random = new Random(seed); // Seed ensures deterministic testing
+Output output = new(masterSeed);
 
-// Boilerplate
-using var output = new Output(seed);
+const int antiRandomIterations = 1000;
 
+// fixed values
+const int initialAggresionAgent1 = 30;
+const int initialAggresionAgent2 = 2;
 
-
-output.WriteLine("sep=;");  
+// file head
 output.WriteLine("Hawk-Dove Simulation on " + DateTime.Now.ToString("MM-dd HH-mm-ss"));
-output.WriteLine("Iterations:", iterations.ToString());
-output.WriteLine("historyRange: ", historyRange.ToString());
-output.WriteLine("Agent1: ", agent1Aggressiveness.ToString());
-output.WriteLine("Agent2: ", agent2Aggressiveness.ToString());
-output.WriteLine("Conflict costs: ", conflictCosts.ToString());
-output.WriteLine("Resource value: ", resourceValue.ToString());
-
-
-output.WriteLine("Seed used:", seed.ToString());
-
-output.WriteLine();
-output.WriteLine("Iteration", "Agent 1 Score", "Agent 2 Score","","","Iteration","Agent 1 Aggression","Agent 2 Aggression");
-
-int[] aggressionOutcomesA1 = new int[iterations];
-int[] aggressionOutcomesA2 = new int[iterations];
-int[] scoreOutcomesA1      = new int[iterations];
-int[] scoreOutcomesA2      = new int[iterations];
-
-// Algorithm
-for (int i = 0; i < iterations; i++)
-{
-    int historyIndex = i % historyRange;
-
-    (int a1Outcome, int a2Outcome) = hawkDoveScenario.Run(random,i);
-    agent1.history[historyIndex] = a1Outcome;
-    agent2.history[historyIndex] = a2Outcome;
-    aggressionOutcomesA1[i] = agent1.aggressiveness;
-    aggressionOutcomesA2[i] = agent2.aggressiveness;
-    scoreOutcomesA1[i] = a1Outcome;
-    scoreOutcomesA2[i] = a2Outcome;
-    
-    // Log every 1000 runs
-    if (i % 1000 == 0)
-    { 
-        Console.Clear(); 
-        Console.WriteLine("runs: " + i.ToString());
-        Console.WriteLine("run score: " + a1Outcome + ", " + a2Outcome);
-    }
-
-    if (!debug)
-        return;
-
-    // Output
-    output.WriteLine(
-           i.ToString(),
-           agent1.history[historyIndex].ToString(),
-           agent2.history[historyIndex].ToString(),
-           "",
-           "",
-           i.ToString(),
-           agent1.aggressiveness.ToString(),
-           agent2.aggressiveness.ToString()
-           );
-}
-
-int[] partialAggressionOutcomesA1 = new int[iterations-1000];
-int[] partialAggressionOutcomesA2 = new int[iterations - 1000];
-for (int i = 1000;i < iterations; i++)
-{
-    partialAggressionOutcomesA1[i-1000] = aggressionOutcomesA1[i];
-    partialAggressionOutcomesA2[i-1000] = aggressionOutcomesA2[i];
-}
-
-
+output.WriteLine("InnerLoop results");
+output.WriteLine("Iterations:", antiRandomIterations.ToString());
+output.WriteLine("historyRange: ", InnerLoop.historyRange.ToString());
+output.WriteLine("Agent1: ", initialAggresionAgent1.ToString());
+output.WriteLine("Agent2: ", initialAggresionAgent2.ToString());
+output.WriteLine("Conflict costs: ", InnerLoop.conflictCosts.ToString());
+output.WriteLine("Resource value: ", InnerLoop.resourceValue.ToString());
+output.WriteLine("MasterSeed: ", masterSeed.ToString());
 output.WriteLine("");
-if (aggressionOutcomesA1.Skip(iterations-1000).Average() == 0 && aggressionOutcomesA2.Skip(iterations - 1000).Average() == 0) 
+output.WriteLine("Iteration", "flatline index", "", "seed for debug");
+
+// algorithm
+int[] resultIndexes = new int[antiRandomIterations];
+
+for (int i = 0; i < antiRandomIterations; i++)
 {
-    output.WriteLine("Aggression ended in zero!");
+    int innerLoopSeed = masterRandom.Next(0,int.MaxValue);
+    InnerLoop run = new(initialAggresionAgent1
+                      , initialAggresionAgent2
+                      , innerLoopSeed, i);
+    int result = run.FlatLineIndex();
+    resultIndexes[i] = result;
+    output.WriteLine(i.ToString(),result.ToString(),"",run.seed.ToString());
 }
-else
-{
-    output.WriteLine("average aggresion a1: " , partialAggressionOutcomesA1.Average().ToString());
-    output.WriteLine("average aggresion a2: " , partialAggressionOutcomesA2.Average().ToString());
-}
+

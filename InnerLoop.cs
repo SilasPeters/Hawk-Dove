@@ -8,38 +8,46 @@ namespace Hawk_Dove
 {
     internal class InnerLoop
     {
-
-        int runNum;
+        readonly int runNum;
 
         // Simulation Constants
-        const int iterations = 10000;
-        const int historyRange = 30;
+        const int iterations = 100_000;
+        public static int historyRange = 30;
 
         // Conflict Constants
-        const int conflictCosts = 200;
-        const int resourceValue = 100;
+        public static int conflictCosts = 200;
+        public static int resourceValue = 100;
 
         // Initial Aggressiveness
-        int agent1Aggressiveness;
-        int agent2Aggressiveness;
+        readonly int agent1Aggressiveness;
+        readonly int agent2Aggressiveness;
 
         // Create scenario
-        Agent agent1;
-        Agent agent2;
-        HawkDoveScenario hawkDoveScenario;
+        readonly Agent agent1;
+        readonly Agent agent2;
+        readonly HawkDoveScenario hawkDoveScenario;
         
-        Random random;
+        readonly Random random;
+        public readonly int seed;
 
         public InnerLoop(int a1a, int a2a, int seed, int runNum)
         {
             agent1Aggressiveness = a1a;
             agent2Aggressiveness = a2a;
-            random = new Random(seed);
+            this.seed = seed;
+            random = new Random(this.seed);
             this.runNum = runNum;
+
+            // Create scenario
+            agent1 = new(agent1Aggressiveness, historyRange);
+            agent2 = new(agent2Aggressiveness, historyRange);
+            hawkDoveScenario = new HawkDoveScenario(agent1, agent2, resourceValue, conflictCosts);
         }
 
-        public int flatLine() 
+        public int FlatLineIndex() 
         {
+
+
             int[] aggressionOutcomesA1 = new int[iterations];
             int[] aggressionOutcomesA2 = new int[iterations];
             int[] scoreOutcomesA1 = new int[iterations];
