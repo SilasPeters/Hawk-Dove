@@ -5,7 +5,7 @@ public class Agent
     public Stance Stance { get; protected set; }
 
     public virtual void SetNewStance(Random r, Agent opponent, int i) => 
-		Stance = r.Next(0, 100) < ChanceHawk(r,opponent, i) ? Stance.Hawk : Stance.Dove;
+		Stance = r.Next(0, 100) < ChanceHawk(opponent, i) ? Stance.Hawk : Stance.Dove;
 
     public int aggressiveness;
 	public int[] history;
@@ -26,7 +26,7 @@ public class Agent
 	// 	history[historyIndex] = a;
 	// }
 
-	public int ChanceHawk(Random r, Agent opponent, int iterationCount)
+	public int ChanceHawk(Agent opponent, int iterationCount)
 	{
 		if (iterationCount < historyRange)
 			return aggressiveness;
