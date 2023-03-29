@@ -32,14 +32,33 @@ output.WriteLine("Iteration", "flatline index", "", "seed for debug");
 // algorithm
 int[] resultIndexes = new int[antiRandomIterations];
 
+// Collection of runs
+InnerLoop[] runs = new InnerLoop[antiRandomIterations];
 for (int i = 0; i < antiRandomIterations; i++)
 {
-    int innerLoopSeed = masterRandom.Next(0,int.MaxValue);
+    int innerLoopSeed = masterRandom.Next(0, int.MaxValue);
     InnerLoop run = new(initialAggresionAgent1
                       , initialAggresionAgent2
                       , innerLoopSeed, i);
-    int result = run.FlatLineIndex();
-    resultIndexes[i] = result;
-    output.WriteLine(i.ToString(),result.ToString(),"",run.seed.ToString());
+    runs[i] = run;
 }
 
+//for (int i = 0; i < antiRandomIterations; i++)
+//{
+//    int innerLoopSeed = masterRandom.Next(0, int.MaxValue);
+//    InnerLoop run = new(initialAggresionAgent1
+//                      , initialAggresionAgent2
+//                      , innerLoopSeed, i);
+//    int result = run.FlatLineIndex();
+//    resultIndexes[i] = result;
+//    output.WriteLine(i.ToString(),result.ToString(),"",run.seed.ToString());
+//}
+
+Parallel.ForEach(runs,
+    currentElement =>
+    {
+        int i = currentElement.runNum;
+        int result = currentElement.FlatLineIndex();
+        resultIndexes[i] = result;
+        output.WriteLine(i.ToString(), result.ToString(), "", currentElement.seed.ToString());
+    });

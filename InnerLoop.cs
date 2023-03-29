@@ -8,7 +8,7 @@ namespace Hawk_Dove
 {
     internal class InnerLoop
     {
-        readonly int runNum;
+        public readonly int runNum;
 
         // Simulation Constants
         const int iterations = 100_000;
