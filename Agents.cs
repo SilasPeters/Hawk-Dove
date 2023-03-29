@@ -17,7 +17,7 @@ public class Agent
 	{
 		aggressiveness = a;
 		historyRange = hr; 
-		history = new int[hr]; 
+		history = new int[hr];
 	}
 
 	// private void PushToHistory(int a)
@@ -26,42 +26,28 @@ public class Agent
 	// 	history[historyIndex] = a;
 	// }
 
-	public int ChanceHawk(Random r, int iteration)
+	public int ChanceHawk(Random r, Agent opponent)
 	{
-		history[iteration % historyRange] = 4;
-		
-		List<int> increasedScores = new();
-		List<int> decreasedScores = new();
-		List<int> neutralScore = new();
-
-		if (history.Any())
+		if (history.Length > historyRange)
 		{
-			if(history.Count > 1)
+			double myAverage = history.Average();
+			double oppAverage = opponent.history.Average();
+			if (myAverage > oppAverage)
 			{
-                for (int i = 1; i < history.Count; i++)
-                {
-					if (history[i].Aggresion > history[i-1].Aggresion)
-						increasedScores.Add(history[i].Score);
-					else if (history[i].Aggresion < history[i-1].Aggresion)
-						decreasedScores.Add(history[i].Score);
-					else
-						neutralScore.Add(history[i].Score);
-                }
-            }
+				if (myAverage < 0)
+				{
+					return aggressiveness -= aggressivenessIncrease;
+				}
+				else
+				{
+					return aggressiveness;
+				}
+			}
+			else
+				return aggressiveness += aggressivenessIncrease;
 		}
-		
-		double averageIncreasedScore = increasedScores.Any() ? increasedScores.Average() : 0d;
-        double averageDecreasedScore = decreasedScores.Any() ? decreasedScores.Average() : 0d;
-        double averageNeutralScore   = neutralScore.Any()	 ? neutralScore.Average()    : 0d;
-
-		List<double> scores = new() { averageIncreasedScore, averageDecreasedScore, averageNeutralScore };
-
-        return scores.IndexOf(scores.Max()) switch
-        {
-            0 => Math.Min(aggressiveness += aggressivenessIncrease, 100),
-            1 => Math.Max(aggressiveness -= aggressivenessIncrease, 0),
-            _ => aggressiveness,
-        };
+		else
+			return aggressiveness;
     }
 }
 
