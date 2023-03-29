@@ -1,6 +1,9 @@
 ﻿using System.Diagnostics;
 using System.Threading.Tasks;
+using System.Linq;
+using System.Collections.Generic;
 using Hawk_Dove;
+using System.Text;
 
 // random that creates seeds for each random run
 // makes sure that it is re-creatable
@@ -12,53 +15,56 @@ Output output = new(masterSeed);
 
 const int antiRandomIterations = 1000;
 
-// fixed values
-const int initialAggresionAgent1 = 0;
-const int initialAggresionAgent2 = 1;
+// cartisian product
+const int minAggression = 0;
+const int maxAggression = 100;
+int[] up = Enumerable.Range(minAggression, maxAggression).ToArray();
+int[] down = Enumerable.Range(minAggression, maxAggression).Reverse().ToArray();
+List<(int,int)> cartesian = new List<(int,int)>();
+
+for (int i = 0; i < up.Length; i++)
+{
+    for (int j = 0; j < down.Length; j++)
+    {
+        (int,int) var = (up[i], down[j]);
+        cartesian.Add(var);
+    }
+}
+
+RandomLoop[] cartesians = new RandomLoop[cartesian.Count];
+for (int i = 0; i < cartesians.Length; i++)
+{
+    RandomLoop loop = new(masterRandom.Next(0, int.MaxValue)
+                        , cartesian[i].Item1
+                        , cartesian[i].Item2);
+    cartesians[i] = loop;
+}
+
 
 // file head
 output.WriteLine("Hawk-Dove Simulation on " + DateTime.Now.ToString("MM-dd HH-mm-ss"));
-output.WriteLine("InnerLoop results");
-output.WriteLine("Iterations:", antiRandomIterations.ToString());
+output.WriteLine("Cartisian results");
 output.WriteLine("historyRange: ", InnerLoop.historyRange.ToString());
-output.WriteLine("Agent1: ", initialAggresionAgent1.ToString());
-output.WriteLine("Agent2: ", initialAggresionAgent2.ToString());
 output.WriteLine("Conflict costs: ", InnerLoop.conflictCosts.ToString());
 output.WriteLine("Resource value: ", InnerLoop.resourceValue.ToString());
 output.WriteLine("MasterSeed: ", masterSeed.ToString());
 output.WriteLine("");
-output.WriteLine("Iteration", "flatline index", "", "seed for debug");
+output.WriteLine("Initial Aggression A1","Initial Aggression A2", "Mean of flatline");
 
-// algorithm
-int[] resultIndexes = new int[antiRandomIterations];
 
-// Collection of runs
-InnerLoop[] runs = new InnerLoop[antiRandomIterations];
-for (int i = 0; i < antiRandomIterations; i++)
-{
-    int innerLoopSeed = masterRandom.Next(0, int.MaxValue);
-    InnerLoop run = new(initialAggresionAgent1
-                      , initialAggresionAgent2
-                      , innerLoopSeed, i);
-    runs[i] = run;
-}
-
-//for (int i = 0; i < antiRandomIterations; i++)
-//{
-//    int innerLoopSeed = masterRandom.Next(0, int.MaxValue);
-//    InnerLoop run = new(initialAggresionAgent1
-//                      , initialAggresionAgent2
-//                      , innerLoopSeed, i);
-//    int result = run.FlatLineIndex();
-//    resultIndexes[i] = result;
-//    output.WriteLine(i.ToString(),result.ToString(),"",run.seed.ToString());
-//}
-
-Parallel.ForEach(runs,
+// Algorithm
+List<double> randomFlatLineMeans = new();
+int toGo = cartesians.Count();
+Parallel.ForEach(cartesians,
     currentElement =>
     {
-        int i = currentElement.runNum;
-        int result = currentElement.FlatLineIndex();
-        resultIndexes[i] = result;
-        output.WriteLine(i.ToString(), result.ToString(), "", currentElement.seed.ToString());
+        double result = currentElement.RandomFlatLineMean();
+        randomFlatLineMeans.Add(result);
+        output.WriteLine(currentElement.initialAggresionAgent1.ToString()
+                       , currentElement.initialAggresionAgent2.ToString()
+                       , result.ToString());
+        toGo--;
+        if (toGo%100 == 0) Console.WriteLine("toGo: " + toGo.ToString());
     });
+
+
