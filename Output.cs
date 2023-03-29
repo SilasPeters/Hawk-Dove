@@ -13,7 +13,8 @@ public sealed class Output : IDisposable
 	{
 		this.seed = seed;
 		stream = OutputLocation.CreateText();
-	}
+        this.WriteLine("sep=;");
+    }
 	
 	public void WriteLine(params string[] values)
 	{
