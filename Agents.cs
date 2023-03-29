@@ -4,8 +4,8 @@ public class Agent
 {
     public Stance Stance { get; protected set; }
 
-    public virtual void SetNewStance(Random r) => 
-		Stance = r.Next(0, 100) < ChanceHawk(r) ? Stance.Hawk : Stance.Dove;
+    public virtual void SetNewStance(Random r, Agent opponent, int i) => 
+		Stance = r.Next(0, 100) < ChanceHawk(r,opponent, i) ? Stance.Hawk : Stance.Dove;
 
     public int aggressiveness;
 	public int[] history;
@@ -26,20 +26,20 @@ public class Agent
 	// 	history[historyIndex] = a;
 	// }
 
-	public int ChanceHawk(Random r, Agent opponent)
+	public int ChanceHawk(Random r, Agent opponent, int iterationCount)
 	{
-		if (history.Length <= historyRange)
+		if (iterationCount < historyRange)
 			return aggressiveness;
 		
 		double myAverage  = history.Average();
 		double oppAverage = opponent.history.Average();
 		
-		if (!(myAverage > oppAverage))
-			return aggressiveness += aggressivenessIncrease;
+		if (myAverage < oppAverage)
+			return aggressiveness = Math.Min(aggressiveness + aggressivenessIncrease, 100);
 		if (myAverage < 0)
-			return aggressiveness -= aggressivenessIncrease;
-		return aggressiveness;
-	}
+			return aggressiveness = Math.Max(aggressiveness - aggressivenessIncrease, 0);
+        return aggressiveness = Math.Max(aggressiveness - aggressivenessIncrease, 0);
+    }
 }
 
 public struct Historic
