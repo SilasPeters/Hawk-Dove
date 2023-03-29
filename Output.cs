@@ -3,13 +3,15 @@ namespace Hawk_Dove;
 public sealed class Output : IDisposable
 {
 	private readonly StreamWriter stream;
-	public string FileName => "HawkDove_1.0_" + DateTime.Now.ToString("MM-dd_HH-mm-ss") + ".csv";
+	private readonly int seed;
+	public string FileName => "HawkDove_1.0_" + DateTime.Now.ToString("MM-dd_HH-mm-ss") + "_" +seed.ToString() +".csv";
 	public FileInfo OutputLocation => new(Path.Combine
 		(Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
 			FileName));
 
-	public Output()
+	public Output(int seed)
 	{
+		this.seed = seed;
 		stream = OutputLocation.CreateText();
 	}
 	
