@@ -28,27 +28,18 @@ public class Agent
 
 	public int ChanceHawk(Random r, Agent opponent)
 	{
-		if (history.Length > historyRange)
-		{
-			double myAverage = history.Average();
-			double oppAverage = opponent.history.Average();
-			if (myAverage > oppAverage)
-			{
-				if (myAverage < 0)
-				{
-					return aggressiveness -= aggressivenessIncrease;
-				}
-				else
-				{
-					return aggressiveness;
-				}
-			}
-			else
-				return aggressiveness += aggressivenessIncrease;
-		}
-		else
+		if (history.Length <= historyRange)
 			return aggressiveness;
-    }
+		
+		double myAverage  = history.Average();
+		double oppAverage = opponent.history.Average();
+		
+		if (!(myAverage > oppAverage))
+			return aggressiveness += aggressivenessIncrease;
+		if (myAverage < 0)
+			return aggressiveness -= aggressivenessIncrease;
+		return aggressiveness;
+	}
 }
 
 public struct Historic
