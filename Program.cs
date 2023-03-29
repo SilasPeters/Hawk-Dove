@@ -13,8 +13,8 @@ Output output = new(masterSeed);
 const int antiRandomIterations = 1000;
 
 // fixed values
-const int initialAggresionAgent1 = 30;
-const int initialAggresionAgent2 = 2;
+const int initialAggresionAgent1 = 0;
+const int initialAggresionAgent2 = 1;
 
 // file head
 output.WriteLine("Hawk-Dove Simulation on " + DateTime.Now.ToString("MM-dd HH-mm-ss"));
