@@ -43,7 +43,7 @@ internal class ResponseAgent : Agent
 internal class HistoryBasedAgent : Agent
 {
 	public int aggressiveness;
-	public List<Tuple<int,int>> history;
+	public List<Historic> history;
 	public int historyRange;
 	const int aggressivenessIncrease = 1;
 
@@ -54,19 +54,18 @@ internal class HistoryBasedAgent : Agent
 		List<int> increasedScores = new();
 		List<int> decreasedScores = new();
 		List<int> neutralScore = new();
-
 		if (history.Any())
 		{
 			if(history.Count > 1)
 			{
                 for (int i = 1; i < history.Count; i++)
                 {
-					if (history[i].Item2 > history[i-1].Item2)
-						increasedScores.Add(history[i].Item2);
-					else if (history[i].Item2 < history[i-1].Item2)
-						decreasedScores.Add(history[i].Item2);
+					if (history[i].Aggresion > history[i-1].Aggresion)
+						increasedScores.Add(history[i].Score);
+					else if (history[i].Aggresion < history[i-1].Aggresion)
+						decreasedScores.Add(history[i].Score);
 					else
-						neutralScore.Add(history[i].Item2);
+						neutralScore.Add(history[i].Score);
                 }
             }
 		}
@@ -77,17 +76,29 @@ internal class HistoryBasedAgent : Agent
 
 		List<double> scores = new() { averageIncreasedScore, averageDecreasedScore, averageNeutralScore };
 
-		if(history.Count >= 100)
-		{
-			Console.Clear();
-		}
+		//if(history.Count >= 100)
+		//{
+		//	Console.Clear();
+		//}
 
         return scores.IndexOf(scores.Max()) switch
         {
-            0 => aggressiveness += aggressivenessIncrease,
-            1 => aggressiveness -= aggressivenessIncrease,
-            _ => averageNeutralScore < 0 ? aggressiveness -= aggressivenessIncrease : aggressiveness,
+            0 => Math.Min(aggressiveness += aggressivenessIncrease, 100),
+            1 => Math.Max(aggressiveness -= aggressivenessIncrease, 0),
+            _ => aggressiveness,
         };
+    }
+}
+
+public struct Historic
+{
+	public int Aggresion;
+	public int Score;
+
+    public Historic(int agg, int score)
+    {
+        Aggresion = agg;
+		Score = score;
     }
 }
 

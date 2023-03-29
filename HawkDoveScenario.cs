@@ -31,13 +31,13 @@ internal class HawkDoveScenario
 
 	private Tuple<int,int> GenerateOutcome(Agent a, Agent b, IResource resource, int conflictCosts)
 	{
-		return 
+		return
 		a.Stance == Stance.Dove
-            ? b.Stance == Stance.Dove
-                ? Tuple.Create(resource.GetValue()/2, resource.GetValue() / 2)
-                : Tuple.Create(0, resource.GetValue())
-            : b.Stance == Stance.Hawk
-				? Tuple.Create((resource.GetValue()/2) - conflictCosts, (resource.GetValue() / 2) - conflictCosts)
+			? b.Stance == Stance.Dove
+				? Tuple.Create(resource.GetValue() / 2, resource.GetValue() / 2)
+				: Tuple.Create(0, resource.GetValue())
+			: b.Stance == Stance.Hawk
+				? Tuple.Create((resource.GetValue() - conflictCosts) / 2, (resource.GetValue() - conflictCosts ) / 2)
                 : Tuple.Create(resource.GetValue(),0);
 	}
 

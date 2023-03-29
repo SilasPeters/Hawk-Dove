@@ -3,9 +3,9 @@ using Hawk_Dove;
 
 // Constants
 const int   iterations    = 1000;
-const int conflictCosts = 75;
+const int conflictCosts = 200;
 const int resourceValue = 100;
-const int  historyRange = 0;
+const int  historyRange = 100;
 
 
 const int agent1Init = 10;
@@ -30,30 +30,28 @@ var seed = Environment.TickCount;
 var random = new Random(seed); // Seed ensures deterministic testing
 output.WriteLine("Seed used:", seed.ToString());
 
-int[] scoresAgentOne = new int[iterations];
-int[] scoresAgentTwo = new int[iterations];
-
 // Algorithm
 for (int i = 0; i < iterations; i++)
 {
     var outcome = hawkDoveScenario.Run(random);
-    agent1.history.Add(Tuple.Create(agent1.aggressiveness, outcome.Item1));
-    agent2.history.Add(Tuple.Create(agent2.aggressiveness, outcome.Item2));
+    agent1.history.Add(new Historic(agent1.aggressiveness, outcome.Item1));
+    agent2.history.Add(new Historic(agent2.aggressiveness, outcome.Item2));
     if (i % 1000 == 0) { Console.Clear(); Console.WriteLine("runs: " + i.ToString()); Console.WriteLine(outcome.ToString()); }
 }
 
 // Ouput
 output.WriteLine();
 output.WriteLine("iteration","agentOneScore","agentTwoScore");
-for (var i = 0; i < iterations; ++i)
+for (var i = 0; i < 150; ++i)
 {
     output.WriteLine(
-           i.ToString(), 
-           agent1.history[i].Item2.ToString(), 
-           agent2.history[i].Item2.ToString(),
+           i.ToString(),
+           agent1.history[i].Score.ToString(),
+           agent2.history[i].Score.ToString(),
            "",
            "",
-           agent1.history[i].Item1.ToString(),
-           agent2.history[i].Item1.ToString()
-           );
+           i.ToString(),
+           agent1.history[i].Aggresion.ToString(),
+           agent2.history[i].Aggresion.ToString()
+           ); ;
 }
