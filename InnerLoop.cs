@@ -11,7 +11,7 @@ namespace Hawk_Dove
         public readonly int runNum;
 
         // Simulation Constants
-        const int iterations = 100_000;
+        const int iterations = 100;
         public static int historyRange = 30;
 
         // Conflict Constants
