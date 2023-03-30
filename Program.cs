@@ -1,7 +1,7 @@
 ﻿using Hawk_Dove;
 
 // General constants
-const bool printContext = false;
+const bool printContext = true;
 
 // Simulation Constants
 const int  iterations   = 10000;
@@ -69,7 +69,7 @@ for (int i = 0; i < iterations; i++)
     }
 
     if (!debug)
-        return;
+        return; // TODO moet hier niet 'break;' staan?
 
     // Output
     export.AddRow(
