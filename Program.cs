@@ -1,5 +1,7 @@
-﻿using System.Diagnostics;
-using Hawk_Dove;
+﻿using Hawk_Dove;
+
+// General constants
+const bool printContext = false;
 
 // Simulation Constants
 const int  iterations   = 10000;
@@ -19,29 +21,26 @@ Agent agent1 = new(agent1Aggressiveness, historyRange);
 Agent agent2 = new(agent2Aggressiveness, historyRange);
 var hawkDoveScenario = new HawkDoveScenario(agent1, agent2, resourceValue, conflictCosts);
 
-
 var seed = 4694968;// Environment.TickCount;
 var random = new Random(seed); // Seed ensures deterministic testing
 
 // Boilerplate
-using var output = new Output(seed);
+using var export = new Export(seed);
+export.AddRow($"sep={Export.CsvSeparator}");
+if (printContext)
+{
+    export.AddRow("Hawk-Dove Simulation on:", DateTime.Now.ToString("MM-dd_HH-mm-ss"));
+    export.AddRow("Iterations:",              iterations.ToString());
+    export.AddRow("historyRange:",            historyRange.ToString());
+    export.AddRow("Agent1:",                  agent1Aggressiveness.ToString());
+    export.AddRow("Agent2:",                  agent2Aggressiveness.ToString());
+    export.AddRow("Conflict costs:",          conflictCosts.ToString());
+    export.AddRow("Resource value:",          resourceValue.ToString());
+    export.AddRow("Seed used:",               seed.ToString());
+    export.AddRow();
+}
 
-
-
-output.WriteLine("sep=;");  
-output.WriteLine("Hawk-Dove Simulation on " + DateTime.Now.ToString("MM-dd HH-mm-ss"));
-output.WriteLine("Iterations:", iterations.ToString());
-output.WriteLine("historyRange: ", historyRange.ToString());
-output.WriteLine("Agent1: ", agent1Aggressiveness.ToString());
-output.WriteLine("Agent2: ", agent2Aggressiveness.ToString());
-output.WriteLine("Conflict costs: ", conflictCosts.ToString());
-output.WriteLine("Resource value: ", resourceValue.ToString());
-
-
-output.WriteLine("Seed used:", seed.ToString());
-
-output.WriteLine();
-output.WriteLine("Iteration", "Agent 1 Score", "Agent 2 Score","","","Iteration","Agent 1 Aggression","Agent 2 Aggression");
+export.AddRow("Iteration", "Agent 1 Score", "Agent 2 Score","","","Iteration","Agent 1 Aggression","Agent 2 Aggression");
 
 int[] aggressionOutcomesA1 = new int[iterations];
 int[] aggressionOutcomesA2 = new int[iterations];
@@ -73,7 +72,7 @@ for (int i = 0; i < iterations; i++)
         return;
 
     // Output
-    output.WriteLine(
+    export.AddRow(
            i.ToString(),
            agent1.history[historyIndex].ToString(),
            agent2.history[historyIndex].ToString(),
@@ -94,13 +93,13 @@ for (int i = 1000;i < iterations; i++)
 }
 
 
-output.WriteLine("");
+export.AddRow();
 if (aggressionOutcomesA1.Skip(iterations-1000).Average() == 0 && aggressionOutcomesA2.Skip(iterations - 1000).Average() == 0) 
 {
-    output.WriteLine("Aggression ended in zero!");
+    export.AddRow("Aggression ended in zero!");
 }
 else
 {
-    output.WriteLine("average aggresion a1: " , partialAggressionOutcomesA1.Average().ToString());
-    output.WriteLine("average aggresion a2: " , partialAggressionOutcomesA2.Average().ToString());
+    export.AddRow("average aggresion a1: " , partialAggressionOutcomesA1.Average().ToString());
+    export.AddRow("average aggresion a2: " , partialAggressionOutcomesA2.Average().ToString());
 }
