@@ -44,14 +44,24 @@ output.WriteLine("");
 output.WriteLine("Initial Aggression A1","Initial Aggression A2", "Mean of flatline");
 
 // Algorithm
-var randomFlatLineMeans = new ConcurrentBag<double>();
+var results = new ConcurrentBag<Result>();
 Parallel.ForEach(cartesians, currentElement =>
     {
-        var result = currentElement.RandomFlatLineMean();
-        randomFlatLineMeans.Add(result);
-        output.WriteLine(currentElement.initialAggresionAgent1.ToString()
-                       , currentElement.initialAggresionAgent2.ToString()
-                       , result.ToString());
+        results.Add(new Result(
+            currentElement.RandomFlatLineMean(),
+            currentElement.initialAggresionAgent1,
+            currentElement.initialAggresionAgent2));
+        // var result = currentElement.RandomFlatLineMean();
+        // results.Add(result);
+        // output.WriteLine(currentElement.initialAggresionAgent1.ToString()
+        //                , currentElement.initialAggresionAgent2.ToString()
+        //                , result.ToString());
     });
 
-return;
+foreach (var result in results)
+    output.WriteLine(
+        result.FlatLineMean.ToString(),
+        result.InitAgg1.ToString(),
+        result.InitAgg2.ToString());
+
+internal record struct Result(double FlatLineMean, double InitAgg1, double InitAgg2);
