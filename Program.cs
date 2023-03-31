@@ -8,7 +8,7 @@ Random masterRandom = new(masterSeed);
 using Output output = new(masterSeed);
 
 // cartesian product
-const int minAggression = 50;
+const int minAggression = 0;
 const int maxAggression = 100;
 
 List<(int,int)> cartesian = new List<(int,int)>();
