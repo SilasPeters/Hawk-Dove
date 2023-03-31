@@ -8,7 +8,7 @@ int masterSeed = Environment.TickCount;
 Random masterRandom = new(masterSeed);
 
 
-Output output = new(masterSeed);
+using Output output = new(masterSeed);
 
 const int antiRandomIterations = 1000;
 
@@ -30,7 +30,7 @@ output.WriteLine("");
 output.WriteLine("Iteration", "flatline index", "", "seed for debug");
 
 // algorithm
-int[] resultIndexes = new int[antiRandomIterations];
+//int[] resultIndexes = new int[antiRandomIterations];
 
 for (int i = 0; i < antiRandomIterations; i++)
 {
@@ -39,7 +39,7 @@ for (int i = 0; i < antiRandomIterations; i++)
                       , initialAggresionAgent2
                       , innerLoopSeed, i);
     int result = run.FlatLineIndex();
-    resultIndexes[i] = result;
+    //resultIndexes[i] = result;
     output.WriteLine(i.ToString(),result.ToString(),"",run.seed.ToString());
 }
 

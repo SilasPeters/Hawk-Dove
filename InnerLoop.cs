@@ -67,12 +67,12 @@ namespace Hawk_Dove
                 scoreOutcomesA2[i] = a2Outcome;
 
                 // Log every 1000 runs
-                if (i % 1000 == 0)
-                {
-                    Console.Clear();
-                    Console.WriteLine("run: " + runNum.ToString());
-                    Console.WriteLine("runs: " + i.ToString());
-                }
+                //if (i % 1000 == 0)
+                //{
+                //    Console.Clear();
+                //    Console.WriteLine("run: " + runNum.ToString());
+                //    Console.WriteLine("runs: " + i.ToString());
+                //}
             }
             for (int i = iterations - 1; i >= 0; i--)
             {
