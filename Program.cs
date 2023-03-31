@@ -10,15 +10,13 @@ using Output output = new(masterSeed);
 // cartesian product
 const int minAggression = 0;
 const int maxAggression = 100;
-int[] up = Enumerable.Range(minAggression, maxAggression - minAggression).ToArray();
-int[] down = Enumerable.Range(minAggression, maxAggression - minAggression).Reverse().ToArray();
-List<(int,int)> cartesian = new List<(int,int)>();
 
-for (int i = 0; i < up.Length; i++)
+List<(int,int)> cartesian = new List<(int,int)>();
+for (int i = minAggression; i <= maxAggression; i++)
 {
-    for (int j = i; j < down.Length; j++)
+    for (int j = i; j <= maxAggression; j++)
     {
-        var var = (up[i], down[j]);
+        var var = (i, j);
         cartesian.Add(var);
     }
 }
@@ -50,7 +48,8 @@ Parallel.ForEach(cartesians, currentElement =>
         results.Add(new Result(
             currentElement.RandomFlatLineMean(),
             currentElement.initialAggresionAgent1,
-            currentElement.initialAggresionAgent2));
+            currentElement.initialAggresionAgent2)
+        );
         // var result = currentElement.RandomFlatLineMean();
         // results.Add(result);
         // output.WriteLine(currentElement.initialAggresionAgent1.ToString()
@@ -60,8 +59,9 @@ Parallel.ForEach(cartesians, currentElement =>
 
 foreach (var result in results)
     output.WriteLine(
-        result.FlatLineMean.ToString(),
         result.InitAgg1.ToString(),
-        result.InitAgg2.ToString());
+        result.InitAgg2.ToString(),
+        result.FlatLineMean.ToString()
+        );
 
 internal record struct Result(double FlatLineMean, double InitAgg1, double InitAgg2);
