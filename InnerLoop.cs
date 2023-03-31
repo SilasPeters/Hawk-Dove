@@ -46,12 +46,10 @@ namespace Hawk_Dove
 
         public int FlatLineIndex() 
         {
-
-
-            int[] aggressionOutcomesA1 = new int[iterations];
-            int[] aggressionOutcomesA2 = new int[iterations];
-            int[] scoreOutcomesA1 = new int[iterations];
-            int[] scoreOutcomesA2 = new int[iterations];
+            Span<int> aggressionOutcomesA1 = stackalloc int[iterations];
+            Span<int> aggressionOutcomesA2 = stackalloc int[iterations];
+            Span<int> scoreOutcomesA1      = stackalloc int[iterations];
+            Span<int> scoreOutcomesA2      = stackalloc int[iterations];
 
             // Algorithm
             for (int i = 0; i < iterations; i++)
@@ -65,7 +63,6 @@ namespace Hawk_Dove
                 aggressionOutcomesA2[i] = agent2.aggressiveness;
                 scoreOutcomesA1[i] = a1Outcome;
                 scoreOutcomesA2[i] = a2Outcome;
-
             }
             for (int i = iterations - 1; i >= 0; i--)
             {

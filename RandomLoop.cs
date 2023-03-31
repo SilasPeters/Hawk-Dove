@@ -13,7 +13,7 @@ namespace Hawk_Dove
         public readonly int masterSeed;
         readonly Random masterRandom;
 
-        const int antiRandomIterations = 1000;
+        const int antiRandomIterations = 100;
 
 
         // fixed values
@@ -40,16 +40,16 @@ namespace Hawk_Dove
                 int innerLoopSeed = masterRandom.Next(0, int.MaxValue);
                 InnerLoop run = new(initialAggresionAgent1
                                   , initialAggresionAgent2
-                                  , innerLoopSeed, i);
+                                  , innerLoopSeed
+                                  , i);
                 runs[i] = run;
             }
-            Parallel.ForEach(runs,
-                currentElement =>
-                {
-                    int i = currentElement.runNum;
-                    int result = currentElement.FlatLineIndex();
-                    resultIndexes[i] = result;
-                   });
+            foreach (var currentElement in runs)
+            {
+                int i = currentElement.runNum;
+                int result = currentElement.FlatLineIndex();
+                resultIndexes[i] = result;
+            }
             return resultIndexes.Average();
         }
     }

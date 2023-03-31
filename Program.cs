@@ -8,7 +8,7 @@ Random masterRandom = new(masterSeed);
 using Output output = new(masterSeed);
 
 // cartesian product
-const int minAggression = 0;
+const int minAggression = 50;
 const int maxAggression = 100;
 
 List<(int,int)> cartesian = new List<(int,int)>();
@@ -43,19 +43,19 @@ output.WriteLine("Initial Aggression A1","Initial Aggression A2", "Mean of flatl
 
 // Algorithm
 var results = new ConcurrentBag<Result>();
-Parallel.ForEach(cartesians, currentElement =>
-    {
-        results.Add(new Result(
-            currentElement.RandomFlatLineMean(),
-            currentElement.initialAggresionAgent1,
-            currentElement.initialAggresionAgent2)
-        );
+foreach (var currentElement in cartesians)
+{
+    results.Add(new Result(
+        currentElement.RandomFlatLineMean(),
+        currentElement.initialAggresionAgent1,
+        currentElement.initialAggresionAgent2)
+    );
+}
         // var result = currentElement.RandomFlatLineMean();
         // results.Add(result);
         // output.WriteLine(currentElement.initialAggresionAgent1.ToString()
         //                , currentElement.initialAggresionAgent2.ToString()
         //                , result.ToString());
-    });
 
 foreach (var result in results)
     output.WriteLine(

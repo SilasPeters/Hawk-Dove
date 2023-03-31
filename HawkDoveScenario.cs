@@ -17,8 +17,8 @@ internal class HawkDoveScenario
 
 	public (int, int) Run(Random random, int i)
 	{
-		Agent1.SetNewStance(random,Agent2, i);
-		Agent2.SetNewStance(random,Agent1, i);
+		Agent1.SetNewStance(random, Agent2, i);
+		Agent2.SetNewStance(random, Agent1, i);
 
         return
         Agent1.Stance == Stance.Dove
