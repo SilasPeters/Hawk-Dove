@@ -69,7 +69,7 @@ namespace Hawk_Dove
                 if (!(aggressionOutcomesA1[i] == 0 && aggressionOutcomesA2[i] == 0))
                     return i;
             }
-            return iterations*2;
+            return 0;
         }
     }
 }
