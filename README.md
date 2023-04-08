@@ -6,3 +6,5 @@ The goal was to create our own model of the [Hawk-Dove](https://en.wikipedia.org
 Included in this repo is the [paper](/Hawk-Dove%20-%20Olaf%20Boekholt%2C%20Fabian%20Rutte%2C%20Silas%20Peters.pdf), which contains the result of this project, but also a complete explenation of the structure of this project (and thus implicitly of this repo).
 
 Special thanks to [FabianRutte](https://github.com/FabianRutten) and [OlafBoekholt](https://github.com/olafboekholt) for working together on this project. 🐢
+
+![The results of our research](/Results.png)
